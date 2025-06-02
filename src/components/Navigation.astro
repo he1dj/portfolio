@@ -1,10 +1,111 @@
 ---
-
+const currentPath = Astro.url.pathname;
 ---
 
 <div class="nav-links">
-  <a href="/" data-astro-prefetch>Home</a>
-  <a href="/about" data-astro-prefetch>About</a>
-  <a href="/blog" data-astro-prefetch>Blog</a>
-  <a href="/tags" data-astro-prefetch>Tags</a>
+  <a href="/" class={currentPath === "/" ? "active" : ""} data-astro-prefetch
+    >Home</a
+  >
+  <a
+    href="/about"
+    class={currentPath === "/about" ? "active" : ""}
+    data-astro-prefetch>About</a
+  >
+
+  <div class="dropdown">
+    <a
+      href="/blog"
+      class={currentPath.startsWith("/blog") ? "active" : ""}
+      data-astro-prefetch>Blog</a
+    >
+    <div class="list">
+      <a href="/blog/tags" data-astro-prefetch>Tags</a>
+    </div>
+  </div>
 </div>
+
+<style>
+  .nav-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    a {
+      font-weight: 500;
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      &.active {
+        color: #fff;
+      }
+    }
+    .dropdown {
+      position: relative;
+      > a::after {
+        content: "";
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        margin-left: 0.4rem;
+        background-color: currentColor;
+        mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20fill%3D%22black%22%20d%3D%22M12.7071%2014.7071c-.3905.3905-1.0237.3905-1.4142%200L6.2929%209.7071c-.3905-.3905-.3905-1.0237%200-1.4142s1.0237-.3905%201.4142%200L12%2012.5858l4.2929-4.2929c.3905-.3905%201.0237-.3905%201.4142%200s.3905%201.0237%200%201.4142l-5%205z%22/%3E%3C/svg%3E");
+        mask-repeat: no-repeat;
+        mask-position: center;
+        mask-size: contain;
+        vertical-align: middle;
+        transition: transform 0.2s ease-in-out;
+        opacity: 0.6;
+      }
+      &:hover > a::after {
+        transform: rotate(180deg);
+      }
+      .list {
+        position: absolute;
+        top: 125%;
+        left: -0.5rem;
+        min-width: 140px;
+        background-color: var(--background-color, #1a1a1a);
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        visibility: hidden;
+        opacity: 0;
+        transition:
+          opacity 0.3s ease,
+          visibility 0s linear 0.2s;
+        z-index: 999;
+        overflow: hidden;
+        a {
+          display: block;
+          padding: 0.5rem 1rem;
+          color: #fff;
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+          }
+        }
+      }
+
+      &:hover .list {
+        visibility: visible;
+        opacity: 1;
+        transition-delay: 0s;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .dropdown {
+        .list {
+          position: static;
+          visibility: visible;
+          opacity: 1;
+          box-shadow: none;
+          padding-left: 1rem;
+        }
+      }
+    }
+  }
+</style>
