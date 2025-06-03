@@ -11,7 +11,9 @@ const currentPath = Astro.url.pathname;
     class={currentPath === "/about" ? "active" : ""}
     data-astro-prefetch>About</a
   >
-
+  <a href="/projects" class={currentPath === "/projects" ? "active" : ""} data-astro-prefetch
+    >Projects</a
+  >
   <div class="dropdown">
     <a
       href="/blog"
@@ -35,6 +37,9 @@ const currentPath = Astro.url.pathname;
       color: var(--primary-color);
       text-decoration: none;
       transition: color 0.2s ease;
+      &:hover {
+        text-decoration: none;
+      }
       &.active {
         color: #fff;
       }

@@ -2,10 +2,127 @@
 import BaseLayout from "./BaseLayout.astro";
 const { frontmatter } = Astro.props;
 ---
+
 <BaseLayout pageTitle={frontmatter.title}>
-  <p>{frontmatter.pubDate.toString().slice(0,10)}</p>
-  <p><em>{frontmatter.description}</em></p>
-  <p>Written by: {frontmatter.author}</p>
-  <img src={frontmatter.image.url} width="300" alt={frontmatter.image.alt} />
-  <slot />
+  <article class="post-container">
+    <header class="post-header">
+      <p class="post-meta">
+        Published on: {
+          frontmatter.pubDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        }
+        {frontmatter.author && <span> • Written by: {frontmatter.author}</span>}
+      </p>
+      {
+        frontmatter.description && (
+          <p class="post-description">
+            <em>{frontmatter.description}</em>
+          </p>
+        )
+      }
+    </header>
+
+    {
+      frontmatter.image?.url && (
+        <figure class="post-image">
+          <img
+            src={frontmatter.image.url}
+            alt={frontmatter.image.alt}
+            width="800"
+            height="450"
+            loading="lazy"
+          />
+          {frontmatter.image.alt && (
+            <figcaption>{frontmatter.image.alt}</figcaption>
+          )}
+        </figure>
+      )
+    }
+
+    <div class="post-content">
+      <slot />
+    </div>
+  </article>
 </BaseLayout>
+
+<style>
+  .post-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    color: inherit;
+  }
+
+  .post-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-meta {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-description {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 1.5rem auto;
+    max-width: 700px;
+  }
+
+  .post-image {
+    margin: 2rem auto;
+    text-align: center;
+  }
+
+  .post-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .post-image figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .post-content {
+    margin-top: 3rem;
+    line-height: 1.7;
+  }
+
+  /* Dark mode adjustments */
+  html.dark .post-image img {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .post-container {
+      padding: 1.5rem 1rem;
+    }
+
+    .post-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .post-description {
+      font-size: 1.1rem;
+    }
+
+    .post-image {
+      margin: 1.5rem auto;
+    }
+  }
+</style>
