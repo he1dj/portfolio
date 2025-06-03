@@ -1,4 +1,4 @@
-<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+<button class="theme-toggle" aria-label="Toggle theme">
   <svg viewBox="0 0 24 24" class="icon">
     <path
       class="sun"
@@ -13,7 +13,7 @@
   </svg>
 </button>
 
-<style>
+<style is:global>
   .theme-toggle {
     border: none;
     background: none;
@@ -21,65 +21,47 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    .icon {
-      width: 1.2rem;
-      height: 1.2rem;
-      transition: fill 0.3s ease;
+    padding: 0.5rem;
+    color: white; /* Ensure icon color */
+  }
+
+  .theme-toggle .icon {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: currentColor; /* Use text color for SVG */
+  }
+
+  /* Mobile specific styles */
+  @media (max-width: 768px) {
+    .theme-toggle {
+      width: 100%;
+      padding: 0.75rem;
+    }
+
+    .theme-toggle .icon {
+      width: 1.5rem;
+      height: 1.5rem;
     }
   }
 
+  /* Theme-specific styles */
   .sun {
-    fill: #fff;
-    transition: fill 0.3s ease;
+    fill: currentColor;
+    opacity: 1;
+    transition: opacity 0.3s ease;
   }
 
   .moon {
-    fill: transparent;
-    transition: fill 0.3s ease;
+    fill: currentColor;
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
   :global(.dark) .sun {
-    fill: transparent;
+    opacity: 0;
   }
 
   :global(.dark) .moon {
-    fill: #fff;
+    opacity: 1;
   }
 </style>
-
-<script>
-  const THEME_PREFERENCE_LOCAL_STORAGE_KEY = "themePreference";
-  const DARK_MODE_CLASS_NAME = "dark";
-  const LIGHT_MODE_CLASS_NAME = "light";
-
-  const themeToggleBtn = document.getElementById("themeToggle");
-
-  themeToggleBtn?.addEventListener("click", () => {
-    const root = document.documentElement;
-    const currentTheme =
-      localStorage.getItem(THEME_PREFERENCE_LOCAL_STORAGE_KEY) ?? "auto";
-
-    let newTheme;
-
-    if (currentTheme === "dark") {
-      newTheme = "light";
-    } else if (currentTheme === "light") {
-      newTheme = "dark";
-    } else {
-      // From 'auto', decide based on system preference
-      newTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "light"
-        : "dark";
-    }
-
-    localStorage.setItem(THEME_PREFERENCE_LOCAL_STORAGE_KEY, newTheme);
-
-    // Reset and apply class
-    root.classList.remove(DARK_MODE_CLASS_NAME, LIGHT_MODE_CLASS_NAME);
-    if (newTheme === "dark") {
-      root.classList.add(DARK_MODE_CLASS_NAME);
-    } else {
-      root.classList.add(LIGHT_MODE_CLASS_NAME);
-    }
-  });
-</script>

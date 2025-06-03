@@ -9,6 +9,18 @@ import ThemeIcon from "./ThemeIcon.astro";
     <div class="divider" aria-hidden="true"></div>
     <ThemeIcon />
   </nav>
+  <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <!-- Mobile Sidebar -->
+  <div class="mobile-sidebar-overlay"></div>
+  <div class="mobile-sidebar">
+    <Navigation />
+    <div class="divider" aria-hidden="true"></div>
+    <ThemeIcon />
+  </div>
 </header>
 
 <style is:global>
@@ -33,17 +45,209 @@ import ThemeIcon from "./ThemeIcon.astro";
       }
     }
   }
-  @media (max-width: 768px) {
-    nav {
-      grid-template-columns: 1fr;
-      grid-row-gap: 1rem;
-      text-align: left;
+
+  /* Mobile Sidebar Overlay */
+  .mobile-sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  /* Mobile Sidebar */
+  .mobile-sidebar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 85%;
+    max-width: 320px;
+    height: 100vh;
+    background-color: rgb(25, 25, 25);
+    padding: 2rem 1.5rem;
+    z-index: 1000;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    .nav-links {
+      width: fit-content;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;
+      margin-top: 3rem;
     }
 
-    .logo,
-    .nav-links,
-    .theme-icon {
-      justify-self: start;
+    .divider {
+      width: 100%;
+      height: 1px;
+      background-color: rgba(255, 255, 255, 0.1);
+      margin: 1rem 0;
+    }
+  }
+
+  /* Active states */
+  .mobile-sidebar.active {
+    right: 0;
+    top: 0;
+  }
+
+  .mobile-sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Hamburger Button */
+  .hamburger {
+    display: none;
+    position: relative;
+    top: 0;
+    right: 1rem;
+    z-index: 1100;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--primary-color);
+    margin: 5px 0;
+    transition: all 0.3s ease;
+  }
+
+  .hamburger.active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Responsive Behavior */
+  @media (max-width: 768px) {
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      justify-content: end;
+      nav {
+        display: none;
+      }
+    }
+
+    .hamburger {
+      display: block;
+    }
+
+    .mobile-sidebar-overlay {
+      display: block;
     }
   }
 </style>
+
+<script is:inline>
+  // Handle sidebar toggle
+  const hamburger = document.querySelector(".hamburger");
+  const sidebar = document.querySelector(".mobile-sidebar");
+  const overlay = document.querySelector(".mobile-sidebar-overlay");
+
+  function toggleSidebar() {
+    hamburger.classList.toggle("active");
+    sidebar.classList.toggle("active");
+    overlay.classList.toggle("active");
+    hamburger.setAttribute(
+      "aria-expanded",
+      hamburger.classList.contains("active")
+    );
+  }
+
+  // Close when clicking overlay
+  overlay.addEventListener("click", toggleSidebar);
+
+  // Close when clicking hamburger
+  hamburger.addEventListener("click", toggleSidebar);
+
+  // Close when navigating (Astro navigation)
+  document.addEventListener("astro:after-swap", () => {
+    if (sidebar.classList.contains("active")) {
+      toggleSidebar();
+    }
+  });
+
+  // Close when clicking outside on mobile
+  document.addEventListener("click", (event) => {
+    if (window.innerWidth <= 768 && sidebar.classList.contains("active")) {
+      if (
+        !sidebar.contains(event.target) &&
+        !hamburger.contains(event.target)
+      ) {
+        toggleSidebar();
+      }
+    }
+  });
+
+  // Close when pressing Escape key
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && sidebar.classList.contains("active")) {
+      toggleSidebar();
+    }
+  });
+</script>
+
+<script is:inline>
+  const root = document.documentElement;
+
+  function getCurrentTheme() {
+    const stored =
+      localStorage.getItem(THEME_PREFERENCE_LOCAL_STORAGE_KEY) ?? "auto";
+    const prefersDark = window.matchMedia(PREFERS_COLOR_SCHEME_DARK).matches;
+    if (stored === "dark") return "dark";
+    if (stored === "light") return "light";
+    return prefersDark ? "dark" : "light";
+  }
+
+  function applyTheme(theme) {
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+  }
+
+  function toggleTheme() {
+    const current = getCurrentTheme();
+    const next = current === "dark" ? "light" : "dark";
+    localStorage.setItem(THEME_PREFERENCE_LOCAL_STORAGE_KEY, next);
+    applyTheme(next);
+  }
+
+  function attachThemeToggle() {
+    document.querySelectorAll(".theme-toggle").forEach((btn) => {
+      btn.removeEventListener("click", toggleTheme);
+      btn.addEventListener("click", toggleTheme);
+    });
+  }
+
+  if (document.readyState !== "loading") {
+    attachThemeToggle();
+  } else {
+    document.addEventListener("DOMContentLoaded", attachThemeToggle);
+  }
+
+  document.addEventListener("astro:after-swap", attachThemeToggle);
+</script>
