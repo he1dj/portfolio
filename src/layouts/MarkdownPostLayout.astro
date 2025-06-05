@@ -1,9 +1,12 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "./BaseLayout.astro";
+import { lazy } from "astro:schema";
 const { frontmatter } = Astro.props;
+const title = `${frontmatter.title} | Beknur Saktanbekov`;
 ---
 
-<BaseLayout pageTitle={frontmatter.title}>
+<BaseLayout pageTitle={title}>
   <article class="post-container">
     <header class="post-header">
       <p class="post-meta">
@@ -14,7 +17,7 @@ const { frontmatter } = Astro.props;
             day: "numeric",
           })
         }
-        {frontmatter.author && <span> • Written by: {frontmatter.author}</span>}
+        {frontmatter.author && <span>Author: {frontmatter.author}</span>}
       </p>
       {
         frontmatter.description && (
@@ -28,12 +31,12 @@ const { frontmatter } = Astro.props;
     {
       frontmatter.image?.url && (
         <figure class="post-image">
-          <img
+          <Image
             src={frontmatter.image.url}
-            alt={frontmatter.image.alt}
-            width="800"
-            height="450"
-            loading="lazy"
+            alt={frontmatter.image.alt ?? ""}
+            width={800}
+            height={450}
+            loading={"eager"}
           />
           {frontmatter.image.alt && (
             <figcaption>{frontmatter.image.alt}</figcaption>
