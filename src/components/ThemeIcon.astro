@@ -22,16 +22,15 @@
     align-items: center;
     justify-content: center;
     padding: 0.5rem;
-    color: white; /* Ensure icon color */
+    color: white;
   }
 
   .theme-toggle .icon {
     width: 1.2rem;
     height: 1.2rem;
-    fill: currentColor; /* Use text color for SVG */
+    fill: currentColor;
   }
 
-  /* Mobile specific styles */
   @media (max-width: 768px) {
     .theme-toggle {
       width: 100%;
@@ -44,24 +43,62 @@
     }
   }
 
-  /* Theme-specific styles */
   .sun {
-    fill: currentColor;
     opacity: 1;
     transition: opacity 0.3s ease;
   }
 
   .moon {
-    fill: currentColor;
     opacity: 0;
     transition: opacity 0.3s ease;
   }
-
-  :global(.dark) .sun {
-    opacity: 0;
-  }
-
-  :global(.dark) .moon {
-    opacity: 1;
-  }
 </style>
+
+<script>
+  // Use the same constants as in BaseLayout.astro
+  const THEME_PREFERENCE_LOCAL_STORAGE_KEY = "themePreference";
+  const DARK_MODE_CLASS_NAME = "dark";
+  const LIGHT_MODE_CLASS_NAME = "light";
+  const PREFERS_COLOR_SCHEME_DARK = "(prefers-color-scheme: dark)";
+  const root = document.documentElement;
+
+  function getCurrentTheme() {
+    const stored =
+      localStorage.getItem(THEME_PREFERENCE_LOCAL_STORAGE_KEY) ?? "auto";
+    const prefersDark = window.matchMedia(PREFERS_COLOR_SCHEME_DARK).matches;
+    if (stored === "dark") return "dark";
+    if (stored === "light") return "light";
+    return prefersDark ? "dark" : "light";
+  }
+
+  function applyTheme(theme: string) {
+    // Clear all theme classes first
+    root.classList.remove(DARK_MODE_CLASS_NAME, LIGHT_MODE_CLASS_NAME);
+    root.classList.add(theme);
+
+    // Force a reflow to ensure transitions work
+    void root.offsetWidth;
+  }
+
+  function toggleTheme() {
+    const current = getCurrentTheme();
+    const next = current === "dark" ? "light" : "dark";
+    localStorage.setItem(THEME_PREFERENCE_LOCAL_STORAGE_KEY, next);
+    applyTheme(next);
+  }
+
+  // Initialize the theme toggle buttons
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".theme-toggle").forEach((btn) => {
+      btn.addEventListener("click", toggleTheme);
+    });
+  });
+
+  // Re-initialize after Astro navigation
+  document.addEventListener("astro:after-swap", () => {
+    document.querySelectorAll(".theme-toggle").forEach((btn) => {
+      btn.removeEventListener("click", toggleTheme);
+      btn.addEventListener("click", toggleTheme);
+    });
+  });
+</script>

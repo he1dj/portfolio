@@ -69,6 +69,12 @@ html {
       background-color: #fff;
       color: #000;
     }
+    .sun {
+      opacity: 0;
+    }
+    .moon {
+      opacity: 1;
+    }
   }
   &.light {
     .btn.outline:hover {
