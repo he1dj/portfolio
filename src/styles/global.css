@@ -1,9 +1,11 @@
+@import "tailwindcss";
+
 :root {
-  /* Existing color variables */
   --primary-color: #b292ff;
   --accent-color: #f0a02b;
 
-  /* New color variables */
+  --btn-outline-color: #ddd;
+
   --text-primary: #000;
   --text-secondary: #6b7280;
   --text-tertiary: #9ca3af;
@@ -15,30 +17,25 @@
   --table-header-bg: #f9fafb;
   --blockquote-border: #e5e7eb;
 
-  /* Font variables */
   --font-sans: sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
 
-  /* Spacing variables */
   --space-xs: 0.5rem;
   --space-sm: 1rem;
   --space-md: 1.5rem;
   --space-lg: 2rem;
   --space-xl: 3rem;
 
-  /* Radius variables */
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-full: 9999px;
 
-  /* Shadow variables */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 
-  /* Dark mode variables - will override light mode */
   &.dark {
     --text-primary: #fff;
     --text-secondary: #d1d5db;
@@ -52,6 +49,7 @@
     --blockquote-border: #4b5563;
   }
 }
+
 html,
 body {
   width: 100%;
@@ -63,6 +61,7 @@ html {
   background-color: #fff;
   color: #000;
   &.dark {
+    --btn-outline-color: #333;
     background-color: #101010;
     color: #fff;
     .btn.outline:hover {
@@ -77,6 +76,7 @@ html {
     }
   }
   &.light {
+    --btn-outline-color: #ddd;
     .btn.outline:hover {
       background-color: #000;
       color: #fff;
@@ -124,7 +124,7 @@ a {
     color: #fff;
   }
   &.outline {
-    border-color: #ddd;
+    border-color: var(--btn-outline-color);
     background-color: transparent;
     color: currentColor;
     &:hover {

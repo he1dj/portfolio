@@ -1,19 +1,25 @@
 ---
-import Social from "./Social.astro";
+import Social from "../components/Social.astro";
 ---
 
+<footer class="footer">
+  <div class="social-icons">
+    <Social platform="GitHub" link="https://www.github.com/he1dj" />
+    <Social platform="LinkedIn" link="https://www.linkedin.com/in/beknur-saktanbekov" />
+  </div>
+</footer>
+
 <style>
-  footer {
-    width: 100%;
-    padding: 1rem;
+  .footer {
+    padding: 2rem;
+    background-color: var(--footer-bg, #111);
+    color: var(--footer-text, #fff);
+    text-align: center;
+  }
+
+  .social-icons {
     display: flex;
     justify-content: center;
-    align-self: center;
     gap: 1rem;
   }
 </style>
-
-<footer>
-  <Social platform="GitHub" username="he1dj" />
-  <Social platform="Instagram" username="thexplos" />
-</footer>
