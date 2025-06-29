@@ -1,8 +1,14 @@
 ---
-import { Icon } from "astro-icon/components";
-const { link, platform } = Astro.props;
+interface Props {
+  platform: string
+  link: string
+  theme?: 'light' | 'dark'
+}
 
-const iconName = platform.toLowerCase();
+import { Icon } from 'astro-icon/components'
+const { link, platform, theme } = Astro.props
+
+const iconName = platform.toLowerCase()
 ---
 
 <a
@@ -12,8 +18,16 @@ const iconName = platform.toLowerCase();
   class="social-link"
   aria-label={`${platform} link`}
 >
-  <Icon name={iconName} class="light-icon" />
-  <Icon name={`${iconName}-dark`} class="dark-icon" />
+  {
+    theme ? (
+      <Icon name={theme === 'dark' ? `${iconName}-dark` : iconName} />
+    ) : (
+      <>
+        <Icon name={iconName} class="light-icon" />
+        <Icon name={`${iconName}-dark`} class="dark-icon" />
+      </>
+    )
+  }
 </a>
 
 <style>
@@ -25,12 +39,11 @@ const iconName = platform.toLowerCase();
     height: 2.5rem;
     border-radius: 50%;
     transition: all 0.3s ease;
-    background: var(--social-bg, rgba(0, 0, 0, 0.05));
+    background: transparent;
     color: var(--social-color, currentColor);
   }
 
   .social-link:hover {
-    transform: scale(1.1);
     background: var(--social-bg-hover, rgba(0, 0, 0, 0.1));
   }
 
@@ -39,16 +52,13 @@ const iconName = platform.toLowerCase();
     height: 1.25rem;
   }
 
-  /* Light/Dark mode handling */
-  .dark-icon {
+  :global(:not(.theme-fixed)) .dark-icon {
     display: none;
   }
-
-  html.dark .light-icon {
+  :global(html.dark:not(.theme-fixed)) .light-icon {
     display: none;
   }
-
-  html.dark .dark-icon {
+  :global(html.dark:not(.theme-fixed)) .dark-icon {
     display: block;
   }
 </style>

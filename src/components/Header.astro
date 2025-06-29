@@ -1,12 +1,23 @@
 ---
-import Navigation from "./Navigation.astro";
-import ThemeIcon from "./ThemeIcon.astro";
+import Navigation from './Navigation.astro'
+import ThemeIcon from './ThemeIcon.astro'
+import Social from './Social.astro'
 ---
 
 <header>
   <nav>
     <Navigation />
     <div class="divider" aria-hidden="true"></div>
+    <Social
+      platform="GitHub"
+      link="https://www.github.com/he1dj"
+      theme="dark"
+    />
+    <Social
+      platform="LinkedIn"
+      link="https://www.linkedin.com/in/beknur-saktanbekov"
+      theme="dark"
+    />
     <ThemeIcon />
   </nav>
   <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
@@ -19,6 +30,15 @@ import ThemeIcon from "./ThemeIcon.astro";
   <div class="mobile-sidebar">
     <Navigation />
     <div class="divider" aria-hidden="true"></div>
+    <Social
+      platform="GitHub"
+      link="https://www.github.com/he1dj"
+      theme="dark"
+    />
+    <Social
+      platform="LinkedIn"
+      link="https://www.linkedin.com/in/beknur-saktanbekov"
+    />
     <ThemeIcon />
   </div>
 </header>
@@ -166,49 +186,49 @@ import ThemeIcon from "./ThemeIcon.astro";
 
 <script is:inline>
   // Handle sidebar toggle
-  const hamburger = document.querySelector(".hamburger");
-  const sidebar = document.querySelector(".mobile-sidebar");
-  const overlay = document.querySelector(".mobile-sidebar-overlay");
+  const hamburger = document.querySelector('.hamburger')
+  const sidebar = document.querySelector('.mobile-sidebar')
+  const overlay = document.querySelector('.mobile-sidebar-overlay')
 
   function toggleSidebar() {
-    hamburger.classList.toggle("active");
-    sidebar.classList.toggle("active");
-    overlay.classList.toggle("active");
+    hamburger.classList.toggle('active')
+    sidebar.classList.toggle('active')
+    overlay.classList.toggle('active')
     hamburger.setAttribute(
-      "aria-expanded",
-      hamburger.classList.contains("active")
-    );
+      'aria-expanded',
+      hamburger.classList.contains('active'),
+    )
   }
 
   // Close when clicking overlay
-  overlay.addEventListener("click", toggleSidebar);
+  overlay.addEventListener('click', toggleSidebar)
 
   // Close when clicking hamburger
-  hamburger.addEventListener("click", toggleSidebar);
+  hamburger.addEventListener('click', toggleSidebar)
 
   // Close when navigating (Astro navigation)
-  document.addEventListener("astro:after-swap", () => {
-    if (sidebar.classList.contains("active")) {
-      toggleSidebar();
+  document.addEventListener('astro:after-swap', () => {
+    if (sidebar.classList.contains('active')) {
+      toggleSidebar()
     }
-  });
+  })
 
   // Close when clicking outside on mobile
-  document.addEventListener("click", (event) => {
-    if (window.innerWidth <= 768 && sidebar.classList.contains("active")) {
+  document.addEventListener('click', (event) => {
+    if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
       if (
         !sidebar.contains(event.target) &&
         !hamburger.contains(event.target)
       ) {
-        toggleSidebar();
+        toggleSidebar()
       }
     }
-  });
+  })
 
   // Close when pressing Escape key
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && sidebar.classList.contains("active")) {
-      toggleSidebar();
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && sidebar.classList.contains('active')) {
+      toggleSidebar()
     }
-  });
+  })
 </script>

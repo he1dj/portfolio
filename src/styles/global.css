@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --primary-color: #b292ff;
@@ -18,9 +18,9 @@
   --blockquote-border: #e5e7eb;
 
   --font-sans: sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
-
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
   --space-xs: 0.5rem;
   --space-sm: 1rem;
   --space-md: 1.5rem;

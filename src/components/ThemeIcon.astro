@@ -1,4 +1,4 @@
-<button class="theme-toggle" aria-label="Toggle theme">
+<button class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
   <svg viewBox="0 0 24 24" class="icon">
     <path
       class="sun"
@@ -56,49 +56,49 @@
 
 <script>
   // Use the same constants as in BaseLayout.astro
-  const THEME_PREFERENCE_LOCAL_STORAGE_KEY = "themePreference";
-  const DARK_MODE_CLASS_NAME = "dark";
-  const LIGHT_MODE_CLASS_NAME = "light";
-  const PREFERS_COLOR_SCHEME_DARK = "(prefers-color-scheme: dark)";
-  const root = document.documentElement;
+  const THEME_PREFERENCE_LOCAL_STORAGE_KEY = 'themePreference'
+  const DARK_MODE_CLASS_NAME = 'dark'
+  const LIGHT_MODE_CLASS_NAME = 'light'
+  const PREFERS_COLOR_SCHEME_DARK = '(prefers-color-scheme: dark)'
+  const root = document.documentElement
 
   function getCurrentTheme() {
     const stored =
-      localStorage.getItem(THEME_PREFERENCE_LOCAL_STORAGE_KEY) ?? "auto";
-    const prefersDark = window.matchMedia(PREFERS_COLOR_SCHEME_DARK).matches;
-    if (stored === "dark") return "dark";
-    if (stored === "light") return "light";
-    return prefersDark ? "dark" : "light";
+      localStorage.getItem(THEME_PREFERENCE_LOCAL_STORAGE_KEY) ?? 'auto'
+    const prefersDark = window.matchMedia(PREFERS_COLOR_SCHEME_DARK).matches
+    if (stored === 'dark') return 'dark'
+    if (stored === 'light') return 'light'
+    return prefersDark ? 'dark' : 'light'
   }
 
   function applyTheme(theme: string) {
     // Clear all theme classes first
-    root.classList.remove(DARK_MODE_CLASS_NAME, LIGHT_MODE_CLASS_NAME);
-    root.classList.add(theme);
+    root.classList.remove(DARK_MODE_CLASS_NAME, LIGHT_MODE_CLASS_NAME)
+    root.classList.add(theme)
 
     // Force a reflow to ensure transitions work
-    void root.offsetWidth;
+    void root.offsetWidth
   }
 
   function toggleTheme() {
-    const current = getCurrentTheme();
-    const next = current === "dark" ? "light" : "dark";
-    localStorage.setItem(THEME_PREFERENCE_LOCAL_STORAGE_KEY, next);
-    applyTheme(next);
+    const current = getCurrentTheme()
+    const next = current === 'dark' ? 'light' : 'dark'
+    localStorage.setItem(THEME_PREFERENCE_LOCAL_STORAGE_KEY, next)
+    applyTheme(next)
   }
 
   // Initialize the theme toggle buttons
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".theme-toggle").forEach((btn) => {
-      btn.addEventListener("click", toggleTheme);
-    });
-  });
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.theme-toggle').forEach((btn) => {
+      btn.addEventListener('click', toggleTheme)
+    })
+  })
 
   // Re-initialize after Astro navigation
-  document.addEventListener("astro:after-swap", () => {
-    document.querySelectorAll(".theme-toggle").forEach((btn) => {
-      btn.removeEventListener("click", toggleTheme);
-      btn.addEventListener("click", toggleTheme);
-    });
-  });
+  document.addEventListener('astro:after-swap', () => {
+    document.querySelectorAll('.theme-toggle').forEach((btn) => {
+      btn.removeEventListener('click', toggleTheme)
+      btn.addEventListener('click', toggleTheme)
+    })
+  })
 </script>
