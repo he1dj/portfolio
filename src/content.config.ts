@@ -1,5 +1,13 @@
-import { glob } from 'astro/loaders'
-import { z, defineCollection } from 'astro:content'
+import { glob } from 'astro/loaders';
+import { z, defineCollection } from 'astro:content';
+
+export const ImageSchema = z.object({
+  url: z.string(),
+  alt: z.string(),
+});
+
+export type ImageContent = z.infer<typeof ImageSchema>;
+
 const blog = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
@@ -7,13 +15,10 @@ const blog = defineCollection({
     pubDate: z.date(),
     description: z.string(),
     author: z.string(),
-    image: z.object({
-      url: z.string(),
-      alt: z.string(),
-    }),
+    image: ImageSchema,
     tags: z.array(z.string()),
   }),
-})
+});
 
 const projects = defineCollection({
   loader: glob({
@@ -22,11 +27,12 @@ const projects = defineCollection({
   }),
   schema: z.object({
     title: z.string(),
+    image: ImageSchema,
     date: z.date(),
     tech: z.array(z.string()),
     github: z.string().url().optional(),
     liveUrl: z.string().url().optional(),
     featured: z.boolean().optional(),
   }),
-})
-export const collections = { blog, projects }
+});
+export const collections = { blog, projects };

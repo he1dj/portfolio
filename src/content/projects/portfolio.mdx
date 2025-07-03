@@ -1,43 +1,45 @@
 ---
 title: Portfolio
+image: 
+  url: /src/assets/projects/portfolio/zoro.jpeg
+  alt: Portfolio screenshot
 date: 2025-06-30
 tech: [Astro, Typescript, Sass]
 github: https://github.com/yourusername/my-awesome-project
 liveUrl: https://beknur.me
 featured: true
 ---
+import { Image } from 'astro:assets';
+import Gallery from '../../components/Gallery.astro';
 
-import { Image } from 'astro:assets'
+export const components = { Gallery };
+
+export const gallery = [
+  {
+    url: '/src/assets/projects/portfolio/zoro.jpeg',
+    alt: 'Test 1'
+  },
+  {
+    url: '/src/assets/blog/hello/blog.jpeg',
+    alt: 'Test 3'
+  },
+  {
+    url: '/src/assets/projects/portfolio/zoro.jpeg',
+    alt: 'Test 2'
+  },
+  {
+    url: '/src/assets/blog/hello/blog.jpeg',
+    alt: 'Test 3'
+  },
+  {
+    url: '/src/assets/projects/portfolio/zoro.jpeg',
+    alt: 'Test 2'
+  },
+];
 
 ## Project Overview
 
 A cutting-edge web app built with Astro and React.
 
-## Features
-
-- Blazing fast performance
-- Responsive design
-- Easy to maintain
-
-<Image
-  src="/src/assets/projects/portfolio/zoro.jpeg"
-  alt="Zoro"
-  width={800}
-  height={450}
-/>
-
-```js title="test.js"
-// Javascript code with syntax highlighting.
-var fun = function lang(l) {
-  dateformat.i18n = require('./lang/' + l)
-  return true
-}
-```
-
-```bash
-echo "This terminal frame has no title"
-```
-
-```powershell title="PowerShell terminal example"
-Write-Output "This one has a title!"
-```
+### This is a test Gallery
+<Gallery gallery={gallery} />

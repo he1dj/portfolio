@@ -1,7 +1,7 @@
 ---
-import Navigation from './Navigation.astro'
-import ThemeIcon from './ThemeIcon.astro'
-import Social from './Social.astro'
+import Navigation from './Navigation.astro';
+import ThemeIcon from './ThemeIcon.astro';
+import Social from './Social.astro';
 ---
 
 <header>
@@ -186,32 +186,32 @@ import Social from './Social.astro'
 
 <script is:inline>
   // Handle sidebar toggle
-  const hamburger = document.querySelector('.hamburger')
-  const sidebar = document.querySelector('.mobile-sidebar')
-  const overlay = document.querySelector('.mobile-sidebar-overlay')
+  const hamburger = document.querySelector('.hamburger');
+  const sidebar = document.querySelector('.mobile-sidebar');
+  const overlay = document.querySelector('.mobile-sidebar-overlay');
 
   function toggleSidebar() {
-    hamburger.classList.toggle('active')
-    sidebar.classList.toggle('active')
-    overlay.classList.toggle('active')
+    hamburger.classList.toggle('active');
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
     hamburger.setAttribute(
       'aria-expanded',
       hamburger.classList.contains('active'),
-    )
+    );
   }
 
   // Close when clicking overlay
-  overlay.addEventListener('click', toggleSidebar)
+  overlay.addEventListener('click', toggleSidebar);
 
   // Close when clicking hamburger
-  hamburger.addEventListener('click', toggleSidebar)
+  hamburger.addEventListener('click', toggleSidebar);
 
   // Close when navigating (Astro navigation)
   document.addEventListener('astro:after-swap', () => {
     if (sidebar.classList.contains('active')) {
-      toggleSidebar()
+      toggleSidebar();
     }
-  })
+  });
 
   // Close when clicking outside on mobile
   document.addEventListener('click', (event) => {
@@ -220,15 +220,15 @@ import Social from './Social.astro'
         !sidebar.contains(event.target) &&
         !hamburger.contains(event.target)
       ) {
-        toggleSidebar()
+        toggleSidebar();
       }
     }
-  })
+  });
 
   // Close when pressing Escape key
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && sidebar.classList.contains('active')) {
-      toggleSidebar()
+      toggleSidebar();
     }
-  })
+  });
 </script>

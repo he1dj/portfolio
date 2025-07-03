@@ -1,14 +1,14 @@
 ---
 interface Props {
-  platform: string
-  link: string
-  theme?: 'light' | 'dark'
+  platform: string;
+  link: string;
+  theme?: 'light' | 'dark';
 }
 
-import { Icon } from 'astro-icon/components'
-const { link, platform, theme } = Astro.props
+import { Icon } from 'astro-icon/components';
+const { link, platform, theme } = Astro.props;
 
-const iconName = platform.toLowerCase()
+const iconName = platform.toLowerCase();
 ---
 
 <a
