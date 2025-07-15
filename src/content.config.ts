@@ -1,38 +1,39 @@
 import { glob } from 'astro/loaders';
 import { z, defineCollection } from 'astro:content';
 
-export const ImageSchema = z.object({
-  url: z.string(),
-  alt: z.string(),
-});
-
-export type ImageContent = z.infer<typeof ImageSchema>;
-
 const blog = defineCollection({
-  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/blog' }),
-  schema: z.object({
-    title: z.string(),
-    pubDate: z.date(),
-    description: z.string(),
-    author: z.string(),
-    image: ImageSchema,
-    tags: z.array(z.string()),
+  loader: glob({
+    pattern: '**/[^_]*/*.{md,mdx}',
+    base: './src/content/blog',
   }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      pubDate: z.date(),
+      description: z.string(),
+      author: z.string(),
+      image: image(),
+      imageAlt: z.string(),
+      tags: z.array(z.string()),
+    }),
 });
 
 const projects = defineCollection({
   loader: glob({
-    pattern: '**/[^_]*.{md,mdx}',
+    pattern: '**/[^_]*/*.{md,mdx}',
     base: './src/content/projects',
   }),
-  schema: z.object({
-    title: z.string(),
-    image: ImageSchema,
-    date: z.date(),
-    tech: z.array(z.string()),
-    github: z.string().url().optional(),
-    liveUrl: z.string().url().optional(),
-    featured: z.boolean().optional(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      image: image(),
+      imageAlt: z.string(),
+      date: z.date(),
+      tech: z.array(z.string()),
+      github: z.string().url().optional(),
+      liveUrl: z.string().url().optional(),
+      featured: z.boolean().optional(),
+    }),
 });
+
 export const collections = { blog, projects };

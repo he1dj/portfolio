@@ -1,18 +1,19 @@
 ---
 import { Image } from 'astro:assets';
 
-interface ImageItem {
-  url: string;
+interface GalleryItem {
+  src: any;
   alt: string;
   width?: number;
   height?: number;
 }
 
 interface Props {
-  gallery?: ImageItem[];
+  gallery?: GalleryItem[];
+  thumbnailSize?: number;
 }
 
-const { gallery = [] } = Astro.props;
+const { gallery = [], thumbnailSize = 300 } = Astro.props;
 ---
 
 <div class="gallery-container">
@@ -20,20 +21,21 @@ const { gallery = [] } = Astro.props;
     {
       gallery.length > 0 ? (
         gallery.map((image, index) => {
-          const aspectRatio =
-            image.width && image.height ? image.width / image.height : 16 / 9;
-
+          const aspectRatio = image.src.width / image.src.height;
           return (
             <div class="gallery-item" data-index={index}>
-              <div class="image-wrapper" style={`aspect-ratio: ${aspectRatio}`}>
+              <div class="image-wrapper">
                 <Image
-                  src={image.url}
+                  src={image.src}
                   alt={image.alt}
-                  width={400}
-                  height={Math.round(400 / aspectRatio)}
+                  width={thumbnailSize}
+                  height={Math.round(thumbnailSize / aspectRatio)}
                   quality={60}
                   loading="lazy"
                   class="thumbnail"
+                  data-original-src={image.src.src}
+                  data-original-width={image.src.width}
+                  data-original-height={image.src.height}
                 />
               </div>
             </div>
@@ -65,75 +67,85 @@ const { gallery = [] } = Astro.props;
     const closeBtn = document.querySelector('.close-btn');
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
+    const lightboxContent = document.querySelector('.lightbox-content');
 
     const galleryImages = Array.from(galleryItems).map((item) => {
       const img = item.querySelector('img');
       return {
-        url: img.getAttribute('data-original-src') || img.src,
+        url: img.dataset.originalSrc,
         alt: img.alt,
+        width: img.dataset.originalWidth,
+        height: img.dataset.originalHeight,
       };
     });
 
     let currentIndex = 0;
 
-    galleryItems.forEach((item, index) => {
-      item.addEventListener('click', () => openLightbox(index));
-    });
+    if (
+      galleryItems.length &&
+      lightbox &&
+      lightboxImg &&
+      caption &&
+      lightboxContent
+    ) {
+      galleryItems.forEach((item, index) => {
+        item.addEventListener('click', () => openLightbox(index));
+      });
 
-    lightbox.addEventListener('click', (e) => {
-      const isClickOnContent = e.target.closest('.lightbox-content');
-      const isClickOnButton = e.target.closest('.close-btn, .nav-btn');
+      function openLightbox(index) {
+        currentIndex = Math.max(0, Math.min(index, galleryImages.length - 1));
+        const image = galleryImages[currentIndex];
 
-      if (!isClickOnContent && !isClickOnButton) {
-        closeLightbox();
-      }
-    });
-
-    function openLightbox(index) {
-      if (!galleryImages?.length) return;
-
-      currentIndex = Math.max(0, Math.min(index, galleryImages.length - 1));
-      const image = galleryImages[currentIndex];
-
-      if (image) {
         lightboxImg.src = image.url;
         lightboxImg.alt = image.alt;
-        caption.textContent = image.alt;
-
-        const hiResImg = new Image();
-        hiResImg.src = image.url;
-        hiResImg.onload = () => {
-          lightboxImg.src = image.url;
+        lightboxImg.onload = function () {
+          this.style.width = '';
+          this.style.height = '';
+          this.style.maxWidth = '90vw';
+          this.style.maxHeight = '90vh';
         };
+        caption.textContent = image.alt;
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
       }
 
-      lightbox.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
+      function closeLightbox() {
+        lightbox.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+
+      function navigate(direction) {
+        currentIndex =
+          (currentIndex + direction + galleryImages.length) %
+          galleryImages.length;
+        openLightbox(currentIndex);
+      }
+
+      lightbox.addEventListener('click', (e) => {
+        if (!lightboxContent.contains(e.target)) {
+          closeLightbox();
+        }
+      });
+
+      if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+      if (prevBtn)
+        prevBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          navigate(-1);
+        });
+      if (nextBtn)
+        nextBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          navigate(1);
+        });
+
+      document.addEventListener('keydown', (e) => {
+        if (lightbox.style.display !== 'flex') return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') navigate(-1);
+        if (e.key === 'ArrowRight') navigate(1);
+      });
     }
-
-    function closeLightbox() {
-      lightbox.style.display = 'none';
-      document.body.style.overflow = 'auto';
-    }
-
-    function navigate(direction) {
-      if (!galleryImages?.length) return;
-      currentIndex =
-        (currentIndex + direction + galleryImages.length) %
-        galleryImages.length;
-      openLightbox(currentIndex);
-    }
-
-    closeBtn.addEventListener('click', closeLightbox);
-    prevBtn.addEventListener('click', () => navigate(-1));
-    nextBtn.addEventListener('click', () => navigate(1));
-
-    document.addEventListener('keydown', (e) => {
-      if (lightbox.style.display !== 'flex') return;
-      if (e.key === 'Escape') closeLightbox();
-      if (e.key === 'ArrowLeft') navigate(-1);
-      if (e.key === 'ArrowRight') navigate(1);
-    });
   });
 </script>
 
@@ -154,6 +166,8 @@ const { gallery = [] } = Astro.props;
   .gallery-item {
     cursor: pointer;
     transition: transform 0.2s ease;
+    aspect-ratio: 1;
+    height: 100%;
   }
 
   .gallery-item:hover {
@@ -162,6 +176,7 @@ const { gallery = [] } = Astro.props;
 
   .image-wrapper {
     width: 100%;
+    height: 100%;
     overflow: hidden;
     border-radius: 8px;
     background: #f5f5f5;
@@ -184,7 +199,7 @@ const { gallery = [] } = Astro.props;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.9);
     display: none;
     align-items: center;
     justify-content: center;
@@ -193,14 +208,14 @@ const { gallery = [] } = Astro.props;
 
   .lightbox-content {
     position: relative;
-    max-width: 90vw;
-    max-height: 90vh;
     text-align: center;
   }
 
   #lightbox-image {
-    max-height: 80vh;
     max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
     object-fit: contain;
   }
 

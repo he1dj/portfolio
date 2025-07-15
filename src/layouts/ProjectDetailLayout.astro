@@ -22,13 +22,13 @@ const title = `${project.title} | Beknur Saktanbekov`;
             project.image && (
               <figure class="post-image">
                 <Image
-                  src={project.image.url}
-                  alt={project.image.alt || project.title}
+                  src={project.image}
+                  alt={project.imageAlt || project.title}
                   width={800}
                   height={400}
                 />
-                {project.image.alt && (
-                  <figcaption>{project.image.alt}</figcaption>
+                {project.imageAlt && (
+                  <figcaption>{project.imageAlt}</figcaption>
                 )}
               </figure>
             )
