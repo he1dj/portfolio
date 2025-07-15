@@ -24,6 +24,7 @@ export default defineConfig({
   trailingSlash: 'never',
   build: {
     format: 'file',
+    assets: 'assets',
   },
   prefetch: {
     defaultStrategy: 'hover',
