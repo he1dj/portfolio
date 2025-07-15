@@ -1,0 +1,41 @@
+---
+title: Portfolio
+image: ./zoro.jpeg
+imageAlt: Cover Image
+date: 2025-06-30
+tech: [Astro, Typescript, Sass]
+github: https://github.com/he1dj/portfolio
+liveUrl: https://www.beknur.me
+featured: true
+---
+
+import { Image } from 'astro:assets';
+import Gallery from '../../../components/Gallery.astro';
+
+import zoro from './gallery/zoro.jpeg';
+import luffy from './gallery/luffy.avif';
+import shanks from './gallery/shanks.webp';
+
+export const components = { Gallery };
+
+export const gallery = [
+    {
+        src: zoro,
+        alt: 'Roronoa Zoro'
+    },
+    {
+        src: luffy,
+        alt: 'Monkey D. Luffy'
+    },
+    {
+        src: shanks,
+        alt: 'Shanks'
+    }
+];
+
+## Project Overview
+
+A cutting-edge web app built with Astro and React.
+
+### This is a test Gallery
+<Gallery gallery={gallery} />

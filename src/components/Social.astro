@@ -1,21 +1,64 @@
 ---
-const { platform, username } = Astro.props;
-const platformLower = platform.toLowerCase();
+interface Props {
+  platform: string;
+  link: string;
+  theme?: 'light' | 'dark';
+}
+
+import { Icon } from 'astro-icon/components';
+const { link, platform, theme } = Astro.props;
+
+const iconName = platform.toLowerCase();
 ---
 
 <a
-  href={`https://www.${platformLower}.com/${username}`}
+  href={link}
   target="_blank"
   rel="noopener noreferrer"
+  class="social-link"
+  aria-label={`${platform} link`}
 >
-  {platform}
+  {
+    theme ? (
+      <Icon name={theme === 'dark' ? `${iconName}-dark` : iconName} />
+    ) : (
+      <>
+        <Icon name={iconName} class="light-icon" />
+        <Icon name={`${iconName}-dark`} class="dark-icon" />
+      </>
+    )
+  }
 </a>
 
 <style>
-  a {
-    padding: 0.5rem 1rem;
-    color: #fff;
-    background-color: var(--primary-color);
-    border-radius: 25px;
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    background: transparent;
+    color: var(--social-color, currentColor);
+  }
+
+  .social-link:hover {
+    background: var(--social-bg-hover, rgba(0, 0, 0, 0.1));
+  }
+
+  .social-link :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  :global(:not(.theme-fixed)) .dark-icon {
+    display: none;
+  }
+  :global(html.dark:not(.theme-fixed)) .light-icon {
+    display: none;
+  }
+  :global(html.dark:not(.theme-fixed)) .dark-icon {
+    display: block;
   }
 </style>

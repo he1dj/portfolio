@@ -1,9 +1,24 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectItem from '../../components/ProjectItem.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 
-const pageTitle = "Projects | Beknur Saktanbekov";
+const pageTitle = 'Projects | Beknur Saktanbekov';
+const allProjects = await getCollection('projects');
 ---
 
 <BaseLayout pageTitle={pageTitle}>
   <h1>Projects</h1>
+  <div class="projects-grid">
+    {allProjects.map((project) => <ProjectItem item={project} />)}
+  </div>
 </BaseLayout>
+
+<style>
+  .projects-grid {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+</style>

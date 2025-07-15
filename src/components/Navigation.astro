@@ -3,23 +3,28 @@ const currentPath = Astro.url.pathname;
 ---
 
 <div class="nav-links">
-  <a href="/" class={currentPath === "/" ? "active" : ""} data-astro-prefetch
+  <a href="/" class={currentPath === '/' ? 'active' : ''} data-astro-prefetch
     >Home</a
   >
   <a
     href="/about"
-    class={currentPath.startsWith("/about") ? "active" : ""}
+    class={currentPath.startsWith('/about') ? 'active' : ''}
     data-astro-prefetch>About</a
   >
   <a
     href="/projects"
-    class={currentPath.startsWith("/projects") ? "active" : ""}
+    class={currentPath.startsWith('/projects') ? 'active' : ''}
     data-astro-prefetch>Projects</a
+  >
+  <a
+    href="/contact"
+    class={currentPath.startsWith('/contact') ? 'active' : ''}
+    data-astro-prefetch>Contact</a
   >
   <div class="dropdown">
     <a
       href="/blog"
-      class={currentPath.startsWith("/blog") ? "active" : ""}
+      class={currentPath.startsWith('/blog') ? 'active' : ''}
       data-astro-prefetch>Blog</a
     >
     <div class="list">
@@ -57,13 +62,12 @@ const currentPath = Astro.url.pathname;
   }
 
   .dropdown > a::after {
-    content: "";
+    content: '';
     display: inline-block;
     width: 1rem;
     height: 1rem;
-    margin-left: 0.4rem;
     background-color: currentColor;
-    mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20fill%3D%22black%22%20d%3D%22M12.7071%2014.7071c-.3905.3905-1.0237.3905-1.4142%200L6.2929%209.7071c-.3905-.3905-.3905-1.0237%200-1.4142s1.0237-.3905%201.4142%200L12%2012.5858l4.2929-4.2929c.3905-.3905%201.0237-.3905%201.4142%200s.3905%201.0237%200%201.4142l-5%205z%22/%3E%3C/svg%3E");
+    mask-image: url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20fill%3D%22black%22%20d%3D%22M12.7071%2014.7071c-.3905.3905-1.0237.3905-1.4142%200L6.2929%209.7071c-.3905-.3905-.3905-1.0237%200-1.4142s1.0237-.3905%201.4142%200L12%2012.5858l4.2929-4.2929c.3905-.3905%201.0237-.3905%201.4142%200s.3905%201.0237%200%201.4142l-5%205z%22/%3E%3C/svg%3E');
     mask-repeat: no-repeat;
     mask-position: center;
     mask-size: contain;

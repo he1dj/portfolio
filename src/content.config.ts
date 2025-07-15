@@ -1,21 +1,39 @@
-// Import the glob loader
-import { glob } from "astro/loaders";
-// Import utilities from `astro:content`
-import { z, defineCollection } from "astro:content";
-// Define a `loader` and `schema` for each collection
+import { glob } from 'astro/loaders';
+import { z, defineCollection } from 'astro:content';
+
 const blog = defineCollection({
-    loader: glob({ pattern: '**\/[^_]*.md', base: "./src/blog" }),
-    schema: z.object({
+  loader: glob({
+    pattern: '**/[^_]*/*.{md,mdx}',
+    base: './src/content/blog',
+  }),
+  schema: ({ image }) =>
+    z.object({
       title: z.string(),
       pubDate: z.date(),
       description: z.string(),
       author: z.string(),
-      image: z.object({
-        url: z.string(),
-        alt: z.string()
-      }),
-      tags: z.array(z.string())
-    })
+      image: image(),
+      imageAlt: z.string(),
+      tags: z.array(z.string()),
+    }),
 });
-// Export a single `collections` object to register your collection(s)
-export const collections = { blog };
+
+const projects = defineCollection({
+  loader: glob({
+    pattern: '**/[^_]*/*.{md,mdx}',
+    base: './src/content/projects',
+  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      image: image(),
+      imageAlt: z.string(),
+      date: z.date(),
+      tech: z.array(z.string()),
+      github: z.string().url().optional(),
+      liveUrl: z.string().url().optional(),
+      featured: z.boolean().optional(),
+    }),
+});
+
+export const collections = { blog, projects };
