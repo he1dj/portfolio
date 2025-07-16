@@ -22,7 +22,9 @@ const project = item.data;
   />
 
   <div class="card__content">
-    <a href={`/projects/${item.id}`} class="card__title">{project.title}</a>
+    <a href={`/projects/${item.id}`} class="card__title" data-astro-prefetch
+      >{project.title}</a
+    >
     <p class="card__date">
       {
         project.date.toLocaleDateString(undefined, {

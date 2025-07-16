@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import zoro from '../assets/images/zoro_lost.png';
+
+const pageTitle = '404 | Beknur Saktanbekov';
+---
+
+<BaseLayout pageTitle={pageTitle}>
+  <div class="container">
+    <div class="text">
+      <h1>404</h1>
+      <h2>Oops! Looks like you're lost here...</h2>
+    </div>
+    <div class="banner">
+      <Image
+        src={zoro}
+        width={zoro.width}
+        height={zoro.height}
+        alt="Zoro lost"
+      />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .container {
+    width: 100%;
+    height: 100%;
+    padding: 3rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    .text {
+      h1 {
+        font-weight: 600;
+        font-size: 8rem;
+        color: #fff;
+        text-align: center;
+      }
+      h2 {
+        font-weight: 400;
+        font-size: 2rem;
+        text-align: center;
+        color: #999999;
+      }
+    }
+    .banner {
+      img {
+        height: 20rem;
+        width: auto;
+      }
+    }
+  }
+</style>
