@@ -89,7 +89,7 @@ body {
   background-color: inherit;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  min-height: 200vh;
+  overflow-y: auto;
 }
 
 a,
@@ -110,6 +110,12 @@ a {
   text-underline-offset: 0.25rem;
   &:not(.btn):hover {
     text-decoration: underline;
+  }
+  &[aria-disabled='true'] {
+    pointer-events: none;
+    cursor: default;
+    color: #adadad;
+    font-weight: 500;
   }
 }
 
@@ -151,7 +157,10 @@ header {
 
 main {
   grid-row: 2;
-  padding: 3rem 15rem;
+  padding: 1rem 3rem;
+  #breadcrumps {
+    margin-bottom: 3rem;
+  }
 }
 
 footer {

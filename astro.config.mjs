@@ -3,9 +3,7 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 import tailwindcss from '@tailwindcss/vite';
 import icon from 'astro-icon';
-
 import mdx from '@astrojs/mdx';
-
 import expressiveCode from 'astro-expressive-code';
 import { loadEnv } from 'vite';
 
@@ -27,7 +25,7 @@ export default defineConfig({
     assets: 'assets',
   },
   prefetch: {
-    defaultStrategy: 'hover',
+    defaultStrategy: 'viewport',
   },
   vite: { plugins: [tailwindcss()] },
 });
